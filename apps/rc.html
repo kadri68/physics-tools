@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>محاكاة الدارة RC (شحن/تفريغ)</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>🔋 محاكاة الدارة RC - الشحن والتفريغ</h1>
+
+  <div class="inputs">
+    <label>🔋 التوتر E (V):</label>
+    <input type="number" id="E" value="12" />
+
+    <label>🌀 المقاومة R (Ω):</label>
+    <input type="number" id="R" value="1000" />
+
+    <label>📦 السعة C (F):</label>
+    <input type="number" id="C" value="0.00005" />
+
+    <label>⏱️ مدة العرض T (s):</label>
+    <input type="number" id="T" value="0.5" />
+
+    <label>🔢 عدد النقاط N:</label>
+    <input type="number" id="N" value="200" />
+  </div>
+
+  <div class="buttons">
+    <button class="btn" onclick="plot()">🎨 رسم البيانات</button>
+    <button class="btn" onclick="clearCharts()">🗑️ مسح البيانات</button>
+    <button class="btn" onclick="showSummary()">📊 مقارنة النتائج</button>
+    <button class="btn" onclick="copySummary()">📋 نسخ الجدول</button>
+    <button class="btn" onclick="showEquations()">📐 ملخص المعادلات</button>
+    <button class="btn" onclick="showHelp()">❓ مساعدة</button>
+    <button class="btn" onclick="showAbout()">👤 من أنا</button>
+  </div>
+
+  <div id="charts"></div>
+
+  <!-- نافذة مقارنة النتائج -->
+  <div id="summaryModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('summaryModal')">&times;</span>
+      <h2>📊 مقارنة النتائج</h2>
+      <div id="summaryContent"></div>
+    </div>
+  </div>
+
+  <!-- نافذة المعادلات -->
+  <div id="equationsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('equationsModal')">&times;</span>
+      <h2>📐 المعادلات المستخدمة</h2>
+      <p>🔹 <b>توتر المكثف عند الشحن:
+</b> 
+Vc(t) = E × (1 - exp(-t/RC))</p>
+      <p>🔹 <b>توتر المكثف عند التفريغ:
+</b> 
+Vc(t) = E × exp(-t/RC)</p>
+      <p>🔹 <b>شدة التيار عند الشحن:
+</b> I(t) = (E/R) × exp(-t/RC)</p>
+      <p>🔹 <b>شدة التيار عند التفريغ:
+</b> 
+I(t) = (-E/R) × exp(-t/RC)</p>
+      <p>🔹 <b>توتر المقاومة:
+</b> 
+Vr(t) = I(t) × R</p>
+      <p>🔹 <b>الشحنة:
+</b>
+ Q(t) = C × Vc(t)</p>
+   <p>🔹 <b>طاقة المكثف:
+</b>
+ U(t) = 0.5 × C × [Vc(t)]²</p>
+    </div>
+  </div>
+
+  <!-- نافذة المساعدة -->
+  <div id="helpModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('helpModal')">&times;</span>
+      <h2>❓ المساعدة</h2>
+      <p>💡 استخدم الأزرار بالترتيب:</p>
+      <p>🎨 رسم البيانات - لرسم التجارب</p>
+      <p>🗑️ مسح - لإعادة ضبط الرسم</p>
+      <p>📊 مقارنة - لرؤية النتائج العدديّة</p>
+      <p>📐 ملخص المعادلات - لمراجعة الصيغ الفيزيائية</p>
+      <p>👤 من أنا - لعرض بيانات الأستاذ المطور</p>
+    </div>
+  </div>
+
+  <!-- نافذة من أنا -->
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('aboutModal')">&times;</span>
+      <h2>👤 من أنا</h2>
+      <p><b>الأستاذ محمد قادري</b><br> أستاذ فيزياء بثانوية محمد الأخضر فيلالي، ولاية غرداية، الجزائر.</p>
+      <p>📧 <b>الإيميل:</b> kadri68@gmail.com</p>
+      <p>📞 <b>الهاتف:</b> 0662692987</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
