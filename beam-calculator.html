@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحليل كمرة بسيطة</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+/* إعدادات الخط الصغير المناسب للهواتف وتوحيد الألوان */
+:root {
+    --primary: #2a5298;
+    --primary-hover: #1e3c72;
+    --bg-color: #f0f4f8;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #d1d5db;
+}
+
+body {
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 13px; /* خط صغير مخصص للهواتف */
+    background: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 15px;
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary);
+    font-size: 1.6em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--bg-color);
+    padding-bottom: 10px;
+}
+
+h3 {
+    font-size: 1.2em;
+    color: var(--primary-hover);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* تصميم البطاقات لتنظيم المحتوى */
+.section-card {
+    background: #fafbfc;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+/* تنسيق حقول الإدخال والأزرار */
+.input-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    align-items: center;
+}
+
+input, select, button {
+    font-family: inherit;
+    font-size: 13px; /* خط صغير */
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 5px rgba(42, 82, 152, 0.2);
+}
+
+button {
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.action-buttons button {
+    flex: 1;
+}
+
+.btn-pdf {
+    background: #e53935;
+}
+
+.btn-pdf:hover {
+    background: #c62828;
+}
+
+/* تنسيق قائمة الأحمال */
+#loadsList {
+    margin-top: 15px;
+}
+
+.load-item {
+    background: white;
+    border-right: 4px solid var(--primary);
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+}
+
+/* تنسيق النتائج */
+#reactions {
+    text-align: center;
+    background: #e8f0fe;
+    padding: 15px;
+    border-radius: 8px;
+    color: #1967d2;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+/* تنسيق الرسوم البيانية */
+.chart-container {
+    position: relative;
+    height: 250px;
+    width: 100%;
+    margin-top: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+    box-sizing: border-box;
+}
+
+/* معلومات المطور */
+.developer-info {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--border-color);
+    text-align: center;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.6;
+}
+.developer-info span {
+    font-weight: bold;
+    color: var(--primary);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>تحليل كمرة بسيطة الارتكاز</h1>
+
+    <div class="section-card">
+        <h3>معطيات الكمرة</h3>
+        <div class="input-group" style="grid-template-columns: 1fr;">
+            <input type="number" id="L" placeholder="أدخل طول الكمرة L (بالمتر)">
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h3>إضافة أحمال</h3>
+        <div class="input-group">
+            <select id="loadType" onchange="toggleDistLoadInput()">
+                <option value="point">حمل مركز (Point Load)</option>
+                <option value="dist">حمل موزع (Distributed Load)</option>
+            </select>
+            <input type="number" id="value" placeholder="القيمة (kN أو kN/m)">
+            <input type="number" id="position" placeholder="الموقع من النقطة A (م)">
+            <input type="number" id="lengthLoad" placeholder="طول الحمل الموزع (م)" style="display:none;">
+            <button onclick="addLoad()">+ إضافة الحمل</button>
+        </div>
+        
+        <div id="loadsList">
+            </div>
+    </div>
+
+    <div class="action-buttons">
+        <button onclick="analyze()">⚙️ تحليل ورسم النتائج</button>
+        <button class="btn-pdf" onclick="exportPDF()">📄 تصدير إلى PDF</button>
+    </div>
+
+    <h3 id="reactions">النتائج (ردود الأفعال ستظهر هنا)</h3>
+
+    <div class="chart-container" style="height: 150px;">
+        <canvas id="beamChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <canvas id="shearChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <canvas id="momentChart"></canvas>
+    </div>
+
+    <div class="developer-info">
+        <p><span>معلومات المطور:</span> الأستاذ محمد قادري</p>
+        <p>أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر</p>
+        <p>Email: kadri68@gmail.com | Phone: 0662692987</p>
+    </div>
+
+</div>
+
+<script>
+let loads = [];
+let charts = {}; // لحفظ الرسوم البيانية لتحديثها بدلاً من تكدسها
+
+// إظهار/إخفاء حقل طول الحمل الموزع
+function toggleDistLoadInput() {
+    let type = document.getElementById("loadType").value;
+    document.getElementById("lengthLoad").style.display = (type === "dist") ? "block" : "none";
+}
+
+function addLoad(){
+    let type = document.getElementById("loadType").value;
+    let value = parseFloat(document.getElementById("value").value);
+    let pos = parseFloat(document.getElementById("position").value);
+    let len = parseFloat(document.getElementById("lengthLoad").value) || 0;
+
+    if(isNaN(value) || isNaN(pos)) {
+        alert("يرجى إدخال قيم صحيحة للحمل والموقع.");
+        return;
+    }
+
+    loads.push({type, value, pos, len});
+    updateLoadsList();
+    
+    // تفريغ الحقول بعد الإضافة لسهولة إدخال حمل جديد
+    document.getElementById("value").value = '';
+    document.getElementById("position").value = '';
+    if(type === 'dist') document.getElementById("lengthLoad").value = '';
+}
+
+function updateLoadsList() {
+    document.getElementById("loadsList").innerHTML = loads.map((l, i) => {
+        let typeName = l.type === "point" ? "حمل مركز" : "حمل موزع";
+        let detail = l.type === "dist" ? ` | الطول: ${l.len} م` : "";
+        return `<div class="load-item">
+            <span><strong>حمل ${i + 1}:</strong> ${typeName}</span>
+            <span>القيمة: ${l.value} | الموقع: ${l.pos} م ${detail}</span>
+        </div>`;
+    }).join("");
+}
+
+function analyze(){
+    let L = parseFloat(document.getElementById("L").value);
+    if(isNaN(L) || L <= 0) {
+        alert("يرجى إدخال طول صحيح للكمرة.");
+        return;
+    }
+
+    let RA = 0, RB = 0;
+    let totalLoad = 0;
+    let totalMoment = 0;
+
+    loads.forEach(l => {
+        if(l.type === "point"){
+            totalLoad += l.value;
+            totalMoment += l.value * l.pos;
+        } else {
+            let P = l.value * l.len;
+            totalLoad += P;
+            totalMoment += P * (l.pos + l.len / 2);
+        }
+    });
+
+    RB = totalMoment / L;
+    RA = totalLoad - RB;
+
+    document.getElementById("reactions").innerHTML = 
+    `RA = ${RA.toFixed(2)} kN &nbsp;&nbsp;|&nbsp;&nbsp; RB = ${RB.toFixed(2)} kN`;
+
+    drawBeam(L);
+    drawShearMoment(L, RA, RB);
+}
+
+// دالة مساعدة لتدمير الرسم البياني القديم قبل رسم الجديد
+function resetChart(canvasId) {
+    if (charts[canvasId]) {
+        charts[canvasId].destroy();
+    }
+}
+
+function drawBeam(L){
+    resetChart("beamChart");
+    charts["beamChart"] = new Chart(document.getElementById("beamChart"), {
+        type: "line",
+        data: {
+            labels: [0, L],
+            datasets: [{
+                label: "الكمرة",
+                data: [0, 0],
+                borderColor: "#333",
+                borderWidth: 6,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, title: { display: true, text: 'الكمرة (Beam)' } },
+            scales: { y: { display: false }, x: { title: { display: true, text: 'المسافة (م)' } } }
+        }
+    });
+}
+
+function drawShearMoment(L, RA, RB){
+    let x = [], V = [], M = [];
+    let step = L / 100; // دقة أعلى للرسم
+
+    for(let i = 0; i <= L; i += step){
+        let shear = RA;
+        loads.forEach(l => {
+            if(l.type === "point" && i >= l.pos) shear -= l.value;
+            if(l.type === "dist" && i >= l.pos){
+                let effective = Math.min(i - l.pos, l.len);
+                if(effective > 0) shear -= l.value * effective;
+            }
+        });
+        V.push(shear);
+        x.push(i.toFixed(2));
+    }
+
+    // حساب العزم باستخدام التكامل العددي (مساحة القص)
+    let currentMoment = 0;
+    for(let i = 0; i < V.length; i++){
+        if(i === 0) {
+            M.push(0);
+        } else {
+            currentMoment += V[i-1] * step;
+            M.push(currentMoment);
+        }
+    }
+    // تصفير العزم في النهاية لتجنب أخطاء التقريب الصغير
+    M[M.length - 1] = 0;
+
+    resetChart("shearChart");
+    charts["shearChart"] = new Chart(document.getElementById("shearChart"), {
+        type: "line",
+        data: {
+            labels: x,
+            datasets: [{
+                label: "قوة القص (Shear - kN)",
+                data: V,
+                borderColor: "#e53935",
+                backgroundColor: "rgba(229, 57, 53, 0.1)",
+                fill: true,
+                borderWidth: 2,
+                pointRadius: 0,
+                stepped: true
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    resetChart("momentChart");
+    charts["momentChart"] = new Chart(document.getElementById("momentChart"), {
+        type: "line",
+        data: {
+            labels: x,
+            datasets: [{
+                label: "عزم الانحناء (Moment - kN.m)",
+                data: M,
+                borderColor: "#1e88e5",
+                backgroundColor: "rgba(30, 136, 229, 0.1)",
+                fill: true,
+                borderWidth: 2,
+                pointRadius: 0
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+}
+
+async function exportPDF(){
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
+    doc.addFont("Tahoma", "Tahoma", "normal");
+    doc.setFont("Tahoma");
+    doc.text("نتائج تحليل الكمرة", 20, 20);
+    doc.text(document.getElementById("reactions").innerText, 20, 30);
+    doc.save("beam_results.pdf");
+}
+</script>
+
+</body>
+</html>

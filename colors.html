@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قاعدة بيانات أكواد الألوان</title>
+
+<style>
+/* تم تعديل الخط ليكون متوسطاً وعريضاً لزيادة الوضوح */
+body {
+    font-family: Tahoma, Geneva, sans-serif;
+    background: #f4f6fb;
+    margin: 0;
+    padding: 15px;
+    font-size: 14px; 
+    font-weight: 600; /* خط عريض متوسط */
+    color: #333;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: #2a5298;
+    font-weight: 800;
+}
+
+header p {
+    margin-top: 0;
+    font-size: 13px;
+    color: #555;
+}
+
+.search {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 90%;
+    max-width: 300px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid #2a5298;
+    border-radius: 8px;
+    font-family: inherit;
+}
+
+.picker {
+    margin: 20px 0;
+    text-align: center;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.picker h3 {
+    font-size: 15px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.picker-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#colorPicker {
+    height: 40px;
+    width: 60px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#copyCustomBtn {
+    width: auto;
+    padding: 8px 15px;
+}
+
+#colors {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    padding: 12px;
+    text-align: center;
+}
+
+.color-box {
+    width: 100%;
+    height: 65px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+
+.color-name-ar {
+    font-size: 15px;
+    display: block;
+    margin-bottom: 2px;
+    color: #000;
+}
+
+.color-name-en {
+    font-size: 12px;
+    color: #777;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.card p {
+    margin: 4px 0;
+    font-size: 13px;
+    direction: ltr;
+    font-weight: 700;
+}
+
+button {
+    padding: 8px 12px;
+    border: none;
+    background: #2a5298;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    margin-top: 5px;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+footer {
+    margin-top: 30px;
+    padding: 15px;
+    background: #eee;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+footer h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>قاعدة بيانات أكواد الألوان</h1>
+    <p>أداة تعليمية لطلاب البرمجة</p>
+</header>
+
+<div class="search">
+    <input type="text" id="search" placeholder="ابحث عن لون...">
+</div>
+
+<div class="picker">
+    <h3>اختيار لون مخصص</h3>
+    <div class="picker-controls">
+        <input type="color" id="colorPicker" value="#2a5298">
+        <button id="copyCustomBtn" onclick="copyCustomColor()">نسخ الكود المختَار</button>
+    </div>
+    <p id="colorValue" style="direction: ltr;">HEX: #2A5298</p>
+</div>
+
+<div id="colors"></div>
+
+<footer>
+    <h3>إعداد:</h3>
+    <p>
+        الأستاذ محمد قادري<br>
+        أستاذ مادة الفيزياء<br>
+        ثانوية محمد الأخضر فيلالي<br>
+        ولاية غرداية - الجزائر
+    </p>
+    <p style="direction: ltr; font-weight: bold;">
+        Email: kadri68@gmail.com<br>
+        Phone: 0662692987
+    </p>
+</footer>
+
+<script>
+const allColors = [
+    { name: "Red", arabicName: "أحمر", hex: "#FF0000", rgb: "rgb(255, 0, 0)" },
+    { name: "Green", arabicName: "أخضر", hex: "#008000", rgb: "rgb(0, 128, 0)" },
+    { name: "Blue", arabicName: "أزرق", hex: "#0000FF", rgb: "rgb(0, 0, 255)" },
+    { name: "Yellow", arabicName: "أصفر", hex: "#FFFF00", rgb: "rgb(255, 255, 0)" },
+    { name: "Black", arabicName: "أسود", hex: "#000000", rgb: "rgb(0, 0, 0)" },
+    { name: "White", arabicName: "أبيض", hex: "#FFFFFF", rgb: "rgb(255, 255, 255)" },
+    { name: "Orange", arabicName: "برتقالي", hex: "#FFA500", rgb: "rgb(255, 165, 0)" },
+    { name: "Purple", arabicName: "بنفسجي", hex: "#800080", rgb: "rgb(128, 0, 128)" },
+    { name: "Pink", arabicName: "وردي", hex: "#FFC0CB", rgb: "rgb(255, 192, 203)" },
+    { name: "Brown", arabicName: "بني", hex: "#A52A2A", rgb: "rgb(165, 42, 42)" },
+    { name: "Gray", arabicName: "رمادي", hex: "#808080", rgb: "rgb(128, 128, 128)" },
+    { name: "Cyan", arabicName: "سماوي", hex: "#00FFFF", rgb: "rgb(0, 255, 255)" },
+    { name: "Navy", arabicName: "كحلي", hex: "#000080", rgb: "rgb(0, 0, 128)" }
+];
+
+displayColors(allColors);
+
+function displayColors(colors) {
+    let container = document.getElementById("colors");
+    container.innerHTML = "";
+    colors.forEach((color, index) => {
+        let card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <div class="color-box" style="background:${color.hex}"></div>
+            <span class="color-name-ar">${color.arabicName}</span>
+            <span class="color-name-en">${color.name}</span>
+            <p>${color.hex}</p>
+            <button id="btn-${index}" onclick="copyText('${color.hex}', 'btn-${index}')">نسخ HEX</button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function copyText(text, btnId) {
+    navigator.clipboard.writeText(text).then(() => {
+        let btn = document.getElementById(btnId);
+        let oldText = btn.innerText;
+        btn.innerText = "تم النسخ!";
+        btn.style.background = "#28a745";
+        setTimeout(() => {
+            btn.innerText = oldText;
+            btn.style.background = "#2a5298";
+        }, 1200);
+    });
+}
+
+function copyCustomColor() {
+    let color = document.getElementById("colorPicker").value;
+    let btn = document.getElementById("copyCustomBtn");
+    navigator.clipboard.writeText(color.toUpperCase()).then(() => {
+        let oldText = btn.innerText;
+        btn.innerText = "تم النسخ!";
+        setTimeout(() => btn.innerText = oldText, 1200);
+    });
+}
+
+document.getElementById("search").addEventListener("input", function() {
+    let val = this.value.toLowerCase();
+    let filtered = allColors.filter(c => 
+        c.name.toLowerCase().includes(val) || 
+        c.arabicName.includes(val) || 
+        c.hex.toLowerCase().includes(val)
+    );
+    displayColors(filtered);
+});
+
+document.getElementById("colorPicker").addEventListener("input", function() {
+    document.getElementById("colorValue").innerText = "HEX: " + this.value.toUpperCase();
+});
+</script>
+
+</body>
+</html>

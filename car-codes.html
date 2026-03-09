@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قاعدة بيانات أعطال السيارات (OBD2)</title>
+
+<style>
+/* إعدادات الخط المناسبة للهواتف المحمولة */
+body {
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
+  background: #f4f6f9;
+  font-size: 18px; 
+  color: #333;
+}
+
+header {
+  background: #0b3d91;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+header h1 {
+  font-size: 18px; 
+  margin: 5px 0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 15px;
+}
+
+label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #555;
+  display: block;
+  margin-bottom: 5px;
+}
+
+input, select, button {
+  padding: 10px;
+  margin: 6px 0;
+  font-size: 15px; 
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-group button {
+  flex: 1; /* تقسيم الأزرار بالتساوي */
+}
+
+button {
+  background: #1e88e5;
+  color: white;
+  cursor: pointer;
+  border: none;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+button:active {
+  opacity: 0.8;
+}
+
+.btn-clear {
+  background: #e53935; /* لون أحمر لزر المسح */
+}
+
+.btn-google {
+  background: #ff9800; /* لون برتقالي لزر جوجل */
+  color: #fff;
+}
+
+.result {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 15px;
+  line-height: 1.6;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.category {
+  background: #e0e0e0;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.code-title {
+  margin: 5px 0 15px 0;
+  color: #0b3d91;
+  font-size: 20px;
+}
+
+footer {
+  background: #111;
+  color: #ccc;
+  text-align: center;
+  padding: 20px 15px;
+  margin-top: 40px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* الوضع الليلي */
+.dark {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+.dark header { background: #1f1f1f; }
+.dark .result { background: #1e1e1e; color: #fff; box-shadow: 0 2px 8px rgba(255,255,255,0.05); }
+.dark .category { background: #333; color: #ddd; }
+.dark label { color: #bbb; }
+.dark input, .dark select { background: #333; color: white; border: 1px solid #555; }
+.dark .code-title { color: #64b5f6; }
+</style>
+</head>
+
+<body>
+
+<header id="mainHeader">
+<h1 id="appTitle">أعطال Chevrolet </h1>
+<button onclick="toggleDark()" style="width: auto; padding: 8px 15px; font-size: 13px; background: #333; border: 1px solid #555;">🌙 وضع ليلي</button>
+</header>
+
+<div class="container">
+
+<label for="carBrand">🚗 الماركة ونوع السيارة:</label>
+<select id="carBrand" onchange="updateBrand()">
+  <option value="Chevrolet  ">Chevrolet (شيفروليه)</option>
+  <option value="Toyota">Toyota (تويوتا)</option>
+  <option value="Hyundai / Kia">Hyundai / Kia (هيونداي وكيا)</option>
+  <option value="Ford">Ford (فورد)</option>
+  <option value="Nissan">Nissan (نيسان)</option>
+    <option value="Nissan">Nissan (نيسان)</option>
+  <option value="General OBD2">سيارة أخرى (بحث عام)</option>
+</select>
+
+<br><br>
+
+<label for="searchInput">🔍 ابحث عن رمز الخطأ:</label>
+<input type="text" id="searchInput" placeholder="أدخل رمز الخطأ (مثال: P0300) أو اسمه...">
+<div class="btn-group">
+  <button onclick="searchCode()">بحث</button>
+  <button onclick="clearSearch()" class="btn-clear">✖ مسح</button>
+</div>
+
+<br>
+
+<select id="codeSelect" onchange="selectCode()">
+<option value="">أو اختر الكود من القائمة الشائعة (OBD2)...</option>
+</select>
+
+<div id="result" class="result" style="display:none;"></div>
+
+</div>
+
+<footer>
+المطور: الأستاذ محمد قادري<br>
+أستاذ مادة الفيزياء<br>
+ثانوية محمد الأخضر فيلالي<br>
+ولاية غرداية - الجزائر<br>
+Email: kadri68@gmail.com<br>
+Phone: 0662692987
+</footer>
+
+<script>
+/* ===== قاعدة بيانات الأكواد العالمية الشائعة (OBD2) ===== */
+const codes = [
+  { code: "P0300", name: "اختلال عشوائي/متعدد في أسطوانات المحرك", category: "المحرك ونظام الوقود", description: "كمبيوتر السيارة اكتشف غياب الاحتراق في أسطوانة أو أكثر بشكل عشوائي.", causes: ["تلف البواجي أو أسلاكها", "ضعف ضغط الوقود", "تسرب هواء (فاكيوم)", "خلل في الموبينة (Coil)"], repair: ["تغيير البواجي وأسلاكها", "فحص الموبينة", "قياس ضغط طرمبة البنزين"] },
+  { code: "P0301", name: "اختلال الاحتراق في الأسطوانة رقم 1", category: "المحرك ونظام الوقود", description: "فشل الاحتراق تحديداً في الأسطوانة الأولى للمحرك.", causes: ["بوجيه تالف في الأسطوانة 1", "سلك بوجيه مقطوع", "بخاخ مسدود"], repair: ["تبديل مكان البوجيه لاختبار العطل", "تنظيف أو استبدال بخاخ الأسطوانة 1"] },
+  { code: "P0302", name: "اختلال الاحتراق في الأسطوانة رقم 2", category: "المحرك ونظام الوقود", description: "فشل الاحتراق تحديداً في الأسطوانة الثانية.", causes: ["بوجيه تالف", "مشكلة في البلف", "بخاخ مسدود"], repair: ["فحص البواجي والأسلاك", "قياس ضغط المحرك للأسطوانة"] },
+  { code: "P0303", name: "اختلال الاحتراق في الأسطوانة رقم 3", category: "المحرك ونظام الوقود", description: "فشل الاحتراق تحديداً في الأسطوانة الثالثة.", causes: ["بوجيه تالف", "ضعف شرارة الموبينة للأسطوانة 3"], repair: ["فحص ملف الإشعال", "استبدال شمعة الاحتراق"] },
+  { code: "P0304", name: "اختلال الاحتراق في الأسطوانة رقم 4", category: "المحرك ونظام الوقود", description: "فشل الاحتراق تحديداً في الأسطوانة الرابعة.", causes: ["بوجيه تالف", "تهريب من ثلاجة الماكينة قرب الأسطوانة 4"], repair: ["فحص تهريب الهواء", "تغيير البواجي والأسلاك"] },
+  { code: "P0101", name: "خلل في أداء حساس تدفق الهواء (MAF)", category: "المحرك ونظام الوقود", description: "قراءة حساس الهواء غير منطقية أو خارج النطاق.", causes: ["اتساخ حساس الـ MAF", "تسرب هواء بعد الحساس"], repair: ["تنظيف حساس الهواء ببخاخ مخصص", "التأكد من إحكام خراطيم الهواء"] },
+  { code: "P0102", name: "إشارة حساس تدفق الهواء (MAF) منخفضة", category: "المحرك ونظام الوقود", description: "الفولتية القادمة من حساس الهواء ضعيفة جداً.", causes: ["قطع في أسلاك الحساس", "فيشة الحساس غير مركبة جيدا"], repair: ["فحص الأسلاك والفيشة", "استبدال الحساس"] },
+  { code: "P0106", name: "خلل في أداء حساس الضغط المطلق (MAP)", category: "المحرك ونظام الوقود", description: "قراءة غير صحيحة لحساس ضغط الثلاجة.", causes: ["انسداد في فتحة الحساس", "خرطوم الفاكيوم مقطوع"], repair: ["فحص خرطوم الحساس", "تنظيف أو تغيير الحساس"] },
+  { code: "P0112", name: "إشارة حساس حرارة هواء السحب (IAT) منخفضة", category: "المحرك ونظام الوقود", description: "الكمبيوتر يقرأ درجة حرارة هواء مرتفعة جداً (فولتية منخفضة).", causes: ["تماس كهربائي في أسلاك الحساس"], repair: ["فحص الأسلاك من التماس", "استبدال الحساس"] },
+  { code: "P0117", name: "إشارة حساس حرارة سائل التبريد (ECT) منخفضة", category: "المحرك ونظام الوقود", description: "يشير إلى قراءة حرارة محرك مرتفعة جداً بسبب خلل كهربائي.", causes: ["نقص شديد في ماء الرديتر", "تلف الحساس"], repair: ["فحص مستوى ماء التبريد", "تغيير حساس الحرارة"] },
+  { code: "P0118", name: "إشارة حساس حرارة سائل التبريد (ECT) مرتفعة", category: "المحرك ونظام الوقود", description: "يشير إلى قراءة حرارة محرك باردة جداً.", causes: ["فيشة حساس الحرارة مفصولة", "تيرموستات عالق مفتوح"], repair: ["فحص توصيلات الحساس", "فحص بلف الحرارة"] },
+  { code: "P0122", name: "إشارة حساس موضع دعسة البنزين (TPS) منخفضة", category: "المحرك ونظام الوقود", description: "قراءة فولتية دعسة البنزين أقل من المسموح به.", causes: ["تلف حساس الـ TPS", "قطع في أسلاك الحساس"], repair: ["تغيير حساس الـ TPS", "ضبط بوابة الهواء"] },
+  { code: "P0131", name: "فولتية حساس الأكسجين منخفضة (Bank 1 Sensor 1)", category: "المحرك ونظام الوقود", description: "حساس الأكسجين الأول يعطي قراءة فقيرة جداً.", causes: ["تسرب هواء السحب", "تلف الحساس"], repair: ["إصلاح تسرب الفاكيوم", "تغيير حساس الأكسجين"] },
+  { code: "P0135", name: "عطل في دائرة سخان حساس الأكسجين (Bank 1 Sensor 1)", category: "المحرك ونظام الوقود", description: "دائرة التسخين داخل الحساس معطلة.", causes: ["فيوز محترق", "سلك السخان مقطوع"], repair: ["فحص الفيوزات", "تغيير حساس الأكسجين"] },
+  { code: "P0171", name: "نظام الوقود فقير جداً (Lean)", category: "المحرك ونظام الوقود", description: "كمية الهواء أكبر بكثير من كمية الوقود في المحرك.", causes: ["تسرب فاكيوم", "طرمبة بنزين ضعيفة", "حساس هواء متسخ"], repair: ["البحث عن تسريب هواء وإصلاحه", "تنظيف حساس الهواء"] },
+  { code: "P0172", name: "نظام الوقود غني جداً (Rich)", category: "المحرك ونظام الوقود", description: "كمية الوقود أكبر بكثير من كمية الهواء.", causes: ["تسييل في البخاخات", "فلتر هواء مسدود"], repair: ["فحص البخاخات", "تغيير فلتر الهواء"] },
+  { code: "P0335", name: "عطل في دائرة حساس الكرنك", category: "المحرك ونظام الوقود", description: "فقدان إشارة دوران المحرك من حساس الكرنك.", causes: ["تلف حساس الكرنك", "أسلاك مقطوعة"], repair: ["تنظيف الحساس والفيشة", "استبدال حساس الكرنك"] },
+  { code: "P0340", name: "عطل في دائرة حساس الكامات", category: "المحرك ونظام الوقود", description: "فقدان إشارة حساس عمود الكامات.", causes: ["تلف حساس الكامات", "سير التايمن غير مضبوط"], repair: ["استبدال حساس الكامات", "ضبط أو تغيير سير التايمن"] },
+  { code: "P0420", name: "كفاءة دبة التلوث أقل من المطلوب", category: "المحرك ونظام الوقود", description: "دبة التلوث لا تنقي الغازات بشكل فعال.", causes: ["تلف دبة التلوث", "تسرب في الشكمان"], repair: ["فحص الشكمان", "تغيير دبة التلوث"] },
+  { code: "P0442", name: "تسرب صغير في نظام تبخير الوقود (EVAP)", category: "المحرك ونظام الوقود", description: "وجود تسريب خفيف لأبخرة البنزين.", causes: ["غطاء خزان الوقود غير محكم أو تالف"], repair: ["إحكام إغلاق غطاء البنزين أو تغييره"] },
+  { code: "P0502", name: "إشارة حساس السرعة (VSS) منخفضة", category: "نظام الفرامل و ABS", description: "كمبيوتر السيارة لا يستلم قراءة السرعة من القير.", causes: ["تلف حساس السرعة (VSS)"], repair: ["تغيير حساس السرعة", "فحص الظفيرة"] },
+  { code: "U0100", name: "فقدان الاتصال مع وحدة تحكم المحرك (ECM)", category: "شبكة الاتصال CAN", description: "الكمبيوترات الأخرى لا تستطيع التواصل مع كمبيوتر المحرك.", causes: ["ضعف في أقطاب البطارية", "تلف في شبكة CAN"], repair: ["تنظيف أقطاب البطارية", "فحص أسلاك الاتصال"] }
+];
+
+/* ===== تحديث اسم التطبيق بناءً على الماركة ===== */
+function updateBrand() {
+  let brand = document.getElementById("carBrand").value;
+  let title = document.getElementById("appTitle");
+  
+  if (brand === "General OBD2") {
+    title.textContent = "أعطال السيارات (OBD2)";
+  } else {
+    title.textContent = "أعطال " + brand;
+  }
+}
+
+/* ===== تعبئة القائمة المنسدلة ===== */
+const select = document.getElementById("codeSelect");
+codes.forEach(c => {
+  let option = document.createElement("option");
+  option.value = c.code;
+  option.textContent = c.code + " - " + c.name;
+  select.appendChild(option);
+});
+
+/* ===== وظيفة البحث وتحديث النتيجة ===== */
+function searchCode() {
+  let input = document.getElementById("searchInput").value.trim().toUpperCase();
+  if(!input) return;
+
+  let found = codes.find(c => c.code === input || c.name.includes(input));
+  displayResult(found, input);
+}
+
+function selectCode() {
+  let val = document.getElementById("codeSelect").value;
+  if(!val) return;
+  
+  let found = codes.find(c => c.code === val);
+  displayResult(found, val);
+}
+
+/* ===== مسح البحث ===== */
+function clearSearch() {
+  document.getElementById("searchInput").value = "";
+  document.getElementById("codeSelect").value = "";
+  document.getElementById("result").style.display = "none";
+}
+
+/* ===== عرض النتيجة أو زر البحث في جوجل ===== */
+function displayResult(code, searchedText) {
+  let result = document.getElementById("result");
+  let brand = document.getElementById("carBrand").value;
+  result.style.display = "block";
+
+  if(!code) {
+    // الكود غير موجود - عرض زر البحث في جوجل
+    result.innerHTML = `
+      <strong style='color:#d32f2f; font-size:16px;'>لم يتم العثور على الكود "${searchedText}" في القاعدة المحلية.</strong>
+      <p style="color:#555; font-size:14px; margin-top:5px;">(قد يكون هذا الكود خاصاً بماركة معينة وغير مدرج في الأكواد العامة)</p>
+      <br>
+      <button class="btn-google" onclick="googleSearchCustom('${searchedText}', '${brand}')">
+        🌐 ابحث عن حلول ${searchedText} لسيارة ${brand} في Google
+      </button>
+    `;
+    return;
+  }
+
+  // الكود موجود
+  result.innerHTML = `
+  <div class="category">${code.category}</div>
+  <h2 class="code-title">${code.code}</h2>
+  <p><strong>الوصف:</strong> ${code.description}</p>
+  <p><strong>الأسباب المحتملة:</strong><br> - ${code.causes.join("<br> - ")}</p>
+  <p><strong>طريقة الإصلاح المقترحة:</strong><br> - ${code.repair.join("<br> - ")}</p>
+  <br>
+  <button class="btn-google" onclick="googleSearchCustom('${code.code}', '${brand}')">
+    🌐 ابحث عن حلول ${code.code} لسيارة ${brand} في Google
+  </button>
+  `;
+}
+
+/* ===== البحث المباشر في جوجل مع دمج نوع السيارة ===== */
+function googleSearchCustom(code, brand) {
+  // دمج الماركة مع الكود للحصول على نتيجة دقيقة جداً
+  let searchQuery = encodeURIComponent(brand + " OBD2 code " + code + " حل مشكلة");
+  window.open("https://www.google.com/search?q=" + searchQuery);
+}
+
+/* ===== الوضع الليلي ===== */
+function toggleDark() {
+  document.body.classList.toggle("dark");
+}
+
+</script>
+
+</body>
+</html>

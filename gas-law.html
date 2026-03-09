@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الغازات المثالية - مطور: محمد قادري</title>
+    <style>
+        /* ===== المتغيرات العامة ===== */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --card-bg: #f0f4ff;
+            --box-bg: #e0f7fa;
+            --steps-bg: #f9f9f9;
+            --accent: #2a5298;
+            --accent-dark: #1e3c72;
+            --border-color: #ccc;
+            --font-size-base: 15px;
+            --border-radius: 12px;
+        }
+
+        /* الوضع الليلي */
+        body.night {
+            --bg-color: #1a1a2e;
+            --text-color: #f0f4f8;
+            --card-bg: #2a2a40;
+            --box-bg: #37474f;
+            --steps-bg: #33334d;
+            --border-color: #444;
+        }
+
+        /* ===== الأنماط العامة ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+            direction: rtl;
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        /* الحاوية الرئيسية */
+        .calculator {
+            max-width: 580px;
+            width: 100%;
+            background-color: var(--bg-color);
+            border-radius: 16px;
+            box-shadow: 10px 20px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* العناوين */
+        h2 {
+            text-align: center;
+            color: var(--accent);
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+        }
+
+        /* أزرار التبديل */
+        .mode-switch {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--box-bg);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-dark);
+        }
+
+        /* بطاقة STP */
+        .stp-card {
+            background-color: var(--box-bg);
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stp-card input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* حقول الإدخال */
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .input-row input,
+        .input-row select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .input-row input {
+            flex: 2;
+            min-width: 0;
+        }
+
+        .input-row select {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        input:disabled,
+        select:disabled {
+            background-color: var(--box-bg);
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* زر الحساب */
+        .btn-calculate {
+            width: 100%;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: background-color 0.2s;
+        }
+
+        .btn-calculate:hover {
+            background-color: var(--accent-dark);
+        }
+
+        /* صندوق النتائج */
+        .result-box {
+            background-color: var(--card-bg);
+            border: 5px solid var(--accent);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .result-value {
+            direction: ltr;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-grow: 1;
+        }
+
+        .result-unit {
+            font-weight: bold;
+            margin-right: 15px;
+            min-width: 50px;
+            text-align: right;
+            color: var(--accent);
+        }
+
+        /* خطوات الحل */
+        .steps-box {
+            background-color: var(--steps-bg);
+            border-right: 4px solid var(--accent);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .steps-box strong {
+            color: var(--accent);
+        }
+
+        /* معلومات المطور */
+        .dev-section {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .dev-info {
+            display: none;
+            background-color: var(--box-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 10px;
+            text-align: right;
+            line-height: 1.8;
+            border: 1px solid var(--border-color);
+        }
+
+        .dev-info hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 10px 0;
+        }
+
+        /* رسائل الخطأ */
+        .error-message {
+            color: #e74c3c;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* فائدة: إخفاء العناصر */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="calculator">
+        <h2>🧪 حاسبة قانون الغازات المثالية</h2>
+
+        <!-- شريط الوضع الليلي -->
+        <div class="mode-switch">
+            <span>🌓 الوضع الليلي / النهاري</span>
+            <button class="btn" onclick="toggleMode()" id="modeToggle">تبديل</button>
+        </div>
+
+        <!-- خيار الشروط النظامية (STP) -->
+        <div class="stp-card">
+            <input type="checkbox" id="stp" onchange="toggleSTP()">
+            <label for="stp" style="margin:0; font-weight:normal;">🔹 تفعيل الشروط النظامية (STP: 1 atm, 0°C)</label>
+        </div>
+
+        <!-- اختيار المجهول -->
+        <div class="input-group">
+            <label>🔍 المتغير المراد حسابه:</label>
+            <select id="unknown" onchange="updateFields()" style="width:100%; padding:10px;">
+                <option value="P">الضغط (P)</option>
+                <option value="V">الحجم (V)</option>
+                <option value="n">كمية المادة (n)</option>
+                <option value="T">درجة الحرارة (T)</option>
+            </select>
+        </div>
+
+        <!-- حقول الإدخال مع الوحدات -->
+        <div class="input-group">
+            <label>📊 الضغط</label>
+            <div class="input-row">
+                <input type="number" id="P" placeholder="قيمة الضغط" step="any">
+                <select id="P_unit">
+                    <option value="Pa">باسكال (Pa)</option>
+                    <option value="atm">ضغط جوي (atm)</option>
+                    <option value="bar">بار (bar)</option>
+                    <option value="cmHg">سم زئبق (cmHg)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>📦 الحجم</label>
+            <div class="input-row">
+                <input type="number" id="V" placeholder="قيمة الحجم" step="any">
+                <select id="V_unit">
+                    <option value="m3">متر مكعب (m³)</option>
+                    <option value="L">لتر (L)</option>
+                    <option value="mL">ملليلتر (mL)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>🧪 كمية المادة (n)</label>
+            <input type="number" id="n" placeholder="عدد المولات" step="any" style="width:100%;">
+        </div>
+
+        <div class="input-group">
+            <label>🌡️ درجة الحرارة</label>
+            <div class="input-row">
+                <input type="number" id="T" placeholder="قيمة الحرارة" step="any">
+                <select id="T_unit">
+                    <option value="K">كلفن (K)</option>
+                    <option value="C">سيليزيوس (°C)</option>
+                    <option value="F">فهرنهايت (°F)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- زر الحساب -->
+        <button class="btn-calculate" onclick="calculate()">⚡ احسب النتيجة الآن</button>
+
+        <!-- منطقة عرض النتيجة -->
+        <div id="result" class="result-box hidden"></div>
+
+        <!-- منطقة عرض خطوات الحل -->
+        <div id="steps" class="steps-box hidden"></div>
+
+        <!-- معلومات المطور -->
+        <div class="dev-section">
+            <button class="btn btn-secondary" onclick="toggleDev()">ℹ️ معلومات المطور</button>
+            <div id="devInfo" class="dev-info">
+                <strong>الأستاذ محمد قادري</strong><br>
+                أستاذ مادة الفيزياء - ثانوية محمد الأخضر فيلالي<br>
+                ولاية غرداية - الجزائر<br>
+                📧 kadri68@gmail.com | 📞 0662692987<br>
+                <hr>
+                ⚛️ ثابت الغازات العام: <strong>R = 8.314 J/(mol·K)</strong>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ==================== الثوابت العامة ====================
+        const R = 8.314;                     // J/(mol·K)
+        const CONVERSION = {
+            pressure: {
+                Pa: 1,
+                atm: 101325,
+                bar: 100000,
+                cmHg: 1333.22
+            },
+            volume: {
+                m3: 1,
+                L: 0.001,
+                mL: 0.000001
+            },
+            temperature: {
+                K: (val) => val,
+                C: (val) => val + 273.15,
+                F: (val) => (val - 32) * 5/9 + 273.15
+            }
+        };
+
+        // ==================== دوال مساعدة ====================
+        /** تنسيق الأرقام علمياً إذا لزم الأمر */
+        function formatScientific(num) {
+            if (num === 0) return "0";
+            const absNum = Math.abs(num);
+            if (absNum >= 1e5 || (absNum < 0.01 && absNum > 0)) {
+                return num.toExponential(4).replace('e', ' ×10^').replace('+', '');
+            }
+            return parseFloat(num.toFixed(6)).toString();
+        }
+
+        /** تبديل الوضع الليلي/النهاري */
+        function toggleMode() {
+            document.body.classList.toggle("night");
+        }
+
+        /** تحديث حالة الحقول بناءً على المتغير المجهول وتفعيل STP */
+        function updateFields() {
+            const unknown = document.getElementById("unknown").value;
+            const stpChecked = document.getElementById("stp").checked;
+
+            // إعادة تمكين جميع الحقول أولاً
+            ["P", "V", "n", "T"].forEach(id => {
+                document.getElementById(id).disabled = false;
+            });
+
+            // تعطيل الحقل المجهول
+            document.getElementById(unknown).disabled = true;
+            document.getElementById(unknown).value = "";   // تفريغ القيمة
+
+            // إذا كان STP مفعلاً، نضبط قيم الضغط ودرجة الحرارة ونتأكد أن المجهول ليس P أو T
+            if (stpChecked) {
+                document.getElementById("P").value = 1;
+                document.getElementById("P_unit").value = "atm";
+                document.getElementById("T").value = 0;
+                document.getElementById("T_unit").value = "C";
+                document.getElementById("P").disabled = true;
+                document.getElementById("T").disabled = true;
+
+                // إذا كان المجهول هو P أو T، نغيره تلقائياً إلى V
+                if (unknown === "P" || unknown === "T") {
+                    document.getElementById("unknown").value = "V";
+                    document.getElementById("V").disabled = true;
+                    document.getElementById("V").value = "";
+                }
+            }
+        }
+
+        /** تبديل STP وتحديث الحقول */
+        function toggleSTP() {
+            const stpChecked = document.getElementById("stp").checked;
+            const unknown = document.getElementById("unknown").value;
+
+            // إذا تم تفعيل STP وكان المجهول هو P أو T، نغير المجهول إلى V
+            if (stpChecked && (unknown === "P" || unknown === "T")) {
+                document.getElementById("unknown").value = "V";
+            }
+            updateFields();
+        }
+
+        /** عرض/إخفاء معلومات المطور */
+        function toggleDev() {
+            const devInfo = document.getElementById("devInfo");
+            devInfo.style.display = devInfo.style.display === "block" ? "none" : "block";
+        }
+
+        // ==================== الحساب الرئيسي ====================
+        function calculate() {
+            // قراءة المجهول
+            const unknown = document.getElementById("unknown").value;
+
+            // قراءة القيم المدخلة
+            const rawP = parseFloat(document.getElementById("P").value);
+            const rawV = parseFloat(document.getElementById("V").value);
+            const rawN = parseFloat(document.getElementById("n").value);
+            const rawT = parseFloat(document.getElementById("T").value);
+
+            // قراءة الوحدات
+            const pUnit = document.getElementById("P_unit").value;
+            const vUnit = document.getElementById("V_unit").value;
+            const tUnit = document.getElementById("T_unit").value;
+
+            // التحقق من المدخلات
+            const missing = [];
+            if (unknown !== "P" && isNaN(rawP)) missing.push("الضغط");
+            if (unknown !== "V" && isNaN(rawV)) missing.push("الحجم");
+            if (unknown !== "n" && isNaN(rawN)) missing.push("كمية المادة");
+            if (unknown !== "T" && isNaN(rawT)) missing.push("درجة الحرارة");
+
+            if (missing.length > 0) {
+                showError(`⚠️ يرجى إدخال قيمة: ${missing.join('، ')}`);
+                return;
+            }
+
+            // تحويل جميع القيم إلى وحدات النظام الدولي (SI)
+            let pSI = rawP, vSI = rawV, tSI = rawT;
+            const stepLog = ["<strong>💡 خطوات الحل بالتفصيل:</strong>"];
+
+            // تحويل الضغط
+            if (unknown !== "P") {
+                if (pUnit === "atm") {
+                    pSI = rawP * CONVERSION.pressure.atm;
+                    stepLog.push(`• تحويل الضغط: ${rawP} atm × 101325 = ${pSI.toFixed(2)} Pa`);
+                } else if (pUnit === "bar") {
+                    pSI = rawP * CONVERSION.pressure.bar;
+                    stepLog.push(`• تحويل الضغط: ${rawP} bar × 10⁵ = ${pSI} Pa`);
+                } else if (pUnit === "cmHg") {
+                    pSI = rawP * CONVERSION.pressure.cmHg;
+                    stepLog.push(`• تحويل الضغط: ${rawP} cmHg × 1333.22 = ${pSI.toFixed(2)} Pa`);
+                }
+            }
+
+            // تحويل الحجم
+            if (unknown !== "V") {
+                if (vUnit === "L") {
+                    vSI = rawV * CONVERSION.volume.L;
+                    stepLog.push(`• تحويل الحجم: ${rawV} L ÷ 1000 = ${vSI} m³`);
+                } else if (vUnit === "mL") {
+                    vSI = rawV * CONVERSION.volume.mL;
+                    stepLog.push(`• تحويل الحجم: ${rawV} mL ÷ 10⁶ = ${vSI} m³`);
+                }
+            }
+
+            // تحويل درجة الحرارة
+            if (unknown !== "T") {
+                if (tUnit === "C") {
+                    tSI = CONVERSION.temperature.C(rawT);
+                    stepLog.push(`• تحويل الحرارة: ${rawT} °C + 273.15 = ${tSI.toFixed(2)} K`);
+                } else if (tUnit === "F") {
+                    tSI = CONVERSION.temperature.F(rawT);
+                    stepLog.push(`• تحويل الحرارة من فهرنهايت: (${rawT} - 32) × 5/9 + 273.15 = ${tSI.toFixed(2)} K`);
+                }
+            }
+
+            // حساب المجهول باستخدام قانون الغازات المثالية: PV = nRT
+            let resultSI;
+            let variableName = "";
+            switch (unknown) {
+                case "P":
+                    resultSI = (rawN * R * tSI) / vSI;
+                    variableName = "الضغط (P)";
+                    stepLog.push(`• تطبيق القانون: P = (n·R·T) / V = (${rawN} × ${R} × ${tSI.toFixed(2)}) / ${vSI} = ${resultSI.toFixed(4)} Pa`);
+                    break;
+                case "V":
+                    resultSI = (rawN * R * tSI) / pSI;
+                    variableName = "الحجم (V)";
+                    stepLog.push(`• تطبيق القانون: V = (n·R·T) / P = (${rawN} × ${R} × ${tSI.toFixed(2)}) / ${pSI} = ${resultSI.toFixed(4)} m³`);
+                    break;
+                case "n":
+                    resultSI = (pSI * vSI) / (R * tSI);
+                    variableName = "كمية المادة (n)";
+                    stepLog.push(`• تطبيق القانون: n = (P·V) / (R·T) = (${pSI} × ${vSI}) / (${R} × ${tSI.toFixed(2)}) = ${resultSI.toFixed(4)} mol`);
+                    break;
+                case "T":
+                    resultSI = (pSI * vSI) / (rawN * R);
+                    variableName = "درجة الحرارة (T)";
+                    stepLog.push(`• تطبيق القانون: T = (P·V) / (n·R) = (${pSI} × ${vSI}) / (${rawN} × ${R}) = ${resultSI.toFixed(4)} K`);
+                    break;
+            }
+
+            // عرض النتائج بوحدات مختلفة
+            const resultDiv = document.getElementById("result");
+            const stepsDiv = document.getElementById("steps");
+
+            // بناء قائمة النتائج
+            let resultHTML = `<div class="result-title">النتيجة: ${variableName}</div>`;
+
+            const addResultLine = (value, unit) => {
+                resultHTML += `
+                    <div class="result-item">
+                        <span class="result-value">${formatScientific(value)}</span>
+                        <span class="result-unit">${unit}</span>
+                    </div>`;
+            };
+
+            if (unknown === "P") {
+                addResultLine(resultSI, "Pa");
+                addResultLine(resultSI / CONVERSION.pressure.atm, "atm");
+                addResultLine(resultSI / CONVERSION.pressure.bar, "bar");
+                addResultLine(resultSI / CONVERSION.pressure.cmHg, "cmHg");
+            } else if (unknown === "V") {
+                addResultLine(resultSI, "m³");
+                addResultLine(resultSI / CONVERSION.volume.L, "L");
+                addResultLine(resultSI / CONVERSION.volume.mL, "mL");
+            } else if (unknown === "n") {
+                addResultLine(resultSI, "mol");
+            } else if (unknown === "T") {
+                addResultLine(resultSI, "K");
+                addResultLine(resultSI - 273.15, "°C");
+                addResultLine((resultSI - 273.15) * 9/5 + 32, "°F");
+            }
+
+            // عرض النتيجة والخطوات
+            resultDiv.innerHTML = resultHTML;
+            resultDiv.classList.remove("hidden");
+
+            stepsDiv.innerHTML = stepLog.join('<br>');
+            stepsDiv.classList.remove("hidden");
+        }
+
+        /** عرض رسالة خطأ في صندوق النتيجة */
+        function showError(message) {
+            const resultDiv = document.getElementById("result");
+            const stepsDiv = document.getElementById("steps");
+            resultDiv.innerHTML = `<div class="error-message">${message}</div>`;
+            resultDiv.classList.remove("hidden");
+            stepsDiv.classList.add("hidden");
+        }
+
+        // تهيئة الصفحة عند التحميل
+        window.addEventListener('DOMContentLoaded', () => {
+            updateFields();  // ضبط الحقول الأولية
+        });
+    </script>
+</body>
+</html>
