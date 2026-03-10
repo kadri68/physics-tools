@@ -1,0 +1,140 @@
+body {
+  direction: rtl;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f8f9fa;
+  font-size: 18px; /* الخط الأساسي أكبر */
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+}
+
+.main-title {
+  font-size: 32px; /* عنوان رئيسي أكبر */
+  font-weight: bold;
+  color: #0066cc;
+  margin-bottom: 20px;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputs label {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+  font-size: 20px; /* حجم أكبر للعنواين فوق المدخلات */
+}
+
+.inputs input {
+  width: 100%;
+  max-width: 350px;
+  font-size: 20px; /* حجم الخط داخل المدخلات أكبر */
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+button {
+  margin: 8px 4px;
+  padding: 12px 24px; /* أزرار أكبر حجما */
+  font-size: 20px;     /* تكبير الخط داخل الأزرار */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+}
+
+.btn-update { background: #28a745; }
+.btn-clear  { background: #dc3545; }
+.btn-summary{ background: #ffc107; color: #000; }
+.btn-help   { background: #007bff; }
+.btn-print  { background: #17a2b8; }
+.btn-about  { background: #6f42c1; }
+
+.chart-container {
+  margin: 30px 0;
+}
+
+h3 {
+  color: #444;
+  font-weight: bold;
+  font-size: 24px; /* العناوين فوق الرسومات أكبر */
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  padding-top: 60px;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background: #fff;
+  margin: auto;
+  padding: 25px;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 10px;
+  text-align: right;
+  font-size: 20px; /* محتوى النوافذ أكبر */
+}
+
+.close {
+  color: #aaa;
+  float: left;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: black;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+  font-size: 20px; /* حجم الجدول أكبر */
+}
+
+table, th, td {
+  border: 1px solid #333;
+  text-align: center;
+  padding: 12px;
+}
+
+@media (max-width: 600px) {
+  .inputs input {
+    max-width: 100%;
+    font-size: 18px;
+  }
+
+  button {
+    font-size: 18px;
+    padding: 10px 20px;
+  }
+
+  h3 {
+    font-size: 22px;
+  }
+
+  .modal-content {
+    font-size: 18px;
+  }
+
+  table {
+    font-size: 18px;
+  }
+}
