@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>ظاهرة تطبيق وقطع التيار في دارة RL</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1 class="main-title">🔬 ظاهرة تطبيق وقطع التيار في دارة RL</h1>
+
+  <div class="inputs">
+    <label>🔋 توتر المولد E:</label>
+    <input type="number" id="E" value="20" />
+    <label>🔌 المقاومة الخارجية  R:</label>
+    <input type="number" id="R" value="20" />
+    <label>🌀 المقاومة الداخلية للوشيعة  r:</label>
+    <input type="number" id="r" value="1" />
+    <label>⚡ذاتية الوشيعة L:</label>
+    <input type="number" id="L" value="0.8" />
+    <label>⏱️ مدة العرض (محور الزمن)  T:</label>
+    <input type="number" id="T" value="0.5" />
+    <label>📊 عدد النقاط N:</label>
+    <input type="number" id="N" value="200" />
+
+    <button class="btn-update" onclick="plot()">🔄 تحديث الرسم</button>
+    <button class="btn-clear" onclick="clearCharts()">🗑️ مسح البيانات</button>
+    <button class="btn-summary" onclick="showSummary()">📋  عرض جدول المقارنة</button>
+    <button class="btn-help" onclick="showHelp()">❓ مساعدة</button>
+    <button class="btn-print" onclick="window.print()">🖨️ طباعة</button>
+    <button class="btn-about" onclick="showAbout()">👨‍💻 من أنا</button>
+  </div>
+
+  <div id="charts"></div>
+
+  <!-- نافذة المساعدة -->
+  <div id="helpModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('helpModal')">&times;</span>
+      <h2>❓ المساعدة</h2>
+      <p>🔄 <b>تحديث الرسم:</b> يرسم البيانات لحالة تطبيق التيار وقطع التيار.</p>
+      <p>🗑️ <b>مسح البيانات:</b> يحذف كل الرسومات للبدء من جديد.</p>
+      <p>📋 <b>جدول المقارنة:</b> يعرض القيم القصوى وثابت الزمن للمقارنة.</p>
+      <p>🖨️ <b>طباعة:</b> لطباعة التقرير.</p>
+      <p>👨‍💻 <b>من أنا:</b> معلومات حول مطوّر التطبيق.</p>
+    </div>
+  </div>
+
+  <!-- نافذة من أنا -->
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('aboutModal')">&times;</span>
+      <h2>👨‍💻 من أنا</h2>
+      <p>💡 هذا التطبيق من تطوير <b>الأستاذ محمد قادري</b> لتبسيط دراسة ظاهرة تطبيق وقطع التيار في دارة RL.</p>
+      <p>📧 Email: kadri68@gmail.com</p>
+      <p>📞 Phone: 0662692987</p>
+    </div>
+  </div>
+
+  <!-- نافذة جدول المقارنة -->
+  <div id="summaryModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('summaryModal')">&times;</span>
+      <h2>📊 جدول مقارنة النتائج</h2>
+      <div id="summaryContent"></div>
+      <button onclick="copySummary()">📋 نسخ الجدول</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
