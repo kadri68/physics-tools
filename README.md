@@ -22,7 +22,7 @@ physics-tools │ ├── index.html           # الصفحة الرئيسية
 ---
 
 ## 🛠️ كيفية التشغيل
-
+https://kadri68.github.io/physics-tools/
 1. استنساخ المستودع:
 ```bash
 git clone https://github.com/kadri68/physics-tools.git
