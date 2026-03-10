@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>الأدوات التعليمية للأستاذ محمد قادري</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+margin:0;
+color:white;
+}
+
+.top{
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:#020617;
+padding:20px;
+flex-wrap:wrap;
+}
+
+.center{
+text-align:center;
+flex:1;
+}
+
+.logo{
+width:80px;
+}
+
+.side{
+width:90px;
+}
+
+.ticker{
+overflow:hidden;
+background:#1e293b;
+}
+
+.ticker-move{
+display:flex;
+width:max-content;
+animation:ticker 25s linear infinite;
+}
+
+.ticker span{
+padding:10px 40px;
+white-space:nowrap;
+}
+
+@keyframes ticker{
+0%{transform:translateX(0)}
+100%{transform:translateX(-50%)}
+}
+
+.navbar{
+background:#1e293b;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+padding:10px;
+}
+
+.navbar button{
+background:#334155;
+border:none;
+color:white;
+padding:10px 15px;
+cursor:pointer;
+border-radius:6px;
+}
+
+.navbar button:hover{
+background:#38bdf8;
+}
+
+.search-box{
+text-align:center;
+margin:20px;
+}
+
+.search-box input{
+padding:10px;
+width:250px;
+border-radius:6px;
+border:none;
+}
+
+.counter{
+text-align:center;
+color:#38bdf8;
+margin-bottom:10px;
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+padding:40px;
+max-width:1200px;
+margin:auto;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+text-decoration:none;
+color:white;
+text-align:center;
+}
+
+.card img{
+width:80px;
+}
+
+.icon{
+font-size:40px;
+}
+
+.card p{
+font-size:13px;
+color:#cbd5e1;
+}
+
+.hidden-template{
+display:none;
+}
+
+.page{
+display:none;
+padding:40px;
+max-width:900px;
+margin:auto;
+}
+
+.page.active{
+display:block;
+}
+
+#pdfViewer{
+width:100%;
+height:700px;
+border:none;
+margin-top:20px;
+}
+
+#topBtn{
+position:fixed;
+bottom:30px;
+left:30px;
+background:#38bdf8;
+border:none;
+padding:12px;
+cursor:pointer;
+display:none;
+}
+
+footer{
+background:#020617;
+padding:20px;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="top">
+
+<img src="images/header-right.png" class="side">
+
+<div class="center">
+
+<img src="images/logo.png" class="logo">
+
+<h2>الموقع الرسمي للأستاذ محمد قادري</h2>
+
+</div>
+
+<img src="images/header-left.png" class="side">
+
+</header>
+
+<div class="ticker">
+
+<div class="ticker-move">
+
+<span>
+الأستاذ محمد قادري | أستاذ الفيزياء | ثانوية محمد الأخضر فيلالي | غرداية | Email: kadri68@gmail.com | Phone: 0662692987
+</span>
+
+<span>
+الأستاذ محمد قادري | أستاذ الفيزياء | ثانوية محمد الأخضر فيلالي | غرداية | Email: kadri68@gmail.com | Phone: 0662692987
+</span>
+
+</div>
+
+</div>
+
+<div class="navbar">
+
+<button onclick="showPage('home')">الرئيسية</button>
+<button onclick="filterExp('third')">الثالثة ثانوي</button>
+<button onclick="filterExp('second')">الثانية ثانوي</button>
+<button onclick="filterExp('first')">الأولى ثانوي</button>
+<button onclick="filterExp('other')">منوعة</button>
+<button onclick="showPage('docs')">وثائق</button>
+<button onclick="showPage('about')">من نحن</button>
+<button onclick="showPage('contact')">اتصل بنا</button>
+
+</div>
+
+<div id="home" class="page active">
+
+<div class="search-box">
+<input type="text" id="search" placeholder="ابحث عن أداة..." onkeyup="searchExp()">
+</div>
+
+<div class="counter">
+عدد الأدوات : <span id="expCount"></span>
+</div>
+
+<div class="container">
+
+<a class="card third" href="apps/rc/rc.html">
+<img src="images/rc.png">
+<h3>رسم بيانات الدارة RC</h3>
+<p>يسمح بإدخال قيم المقاومة وسعة المكثفة وحساب تغير التوتر أثناء الشحن والتفريغ.</p>
+</a>
+
+<a class="card third" href="apps/rl/rl.html">
+<img src="images/rl.png">
+<h3>رسم بيانات الدارة RL</h3>
+<p>يسمح للمستخدم بإدخال قيم المقاومة والذاتية.</p>
+</a>
+
+<a class="card third" href="apps/os/os.html">
+<img src="images/os.png">
+<h3>راسم الاهتزاز المهبطي</h3>
+<p>محاكاة راسم الاهتزاز مع دارات RC و RL.</p>
+</a>
+
+<a class="card first" href="apps/gas-law.html">
+<div class="icon">🧪</div>
+<h3>قانون الغازات المثالية</h3>
+<p>أداة لحساب العلاقة بين الضغط والحجم ودرجة الحرارة.</p>
+</a>
+
+<a class="card other" href="apps/beam-calculator.html">
+<div class="icon">🏗️</div>
+<h3>حساب ردود أفعال المساند</h3>
+<p>أداة هندسية لحساب ردود الأفعال ورسم المخططات.</p>
+</a>
+
+<a class="card other" href="apps/colors.html">
+<div class="icon">🎨</div>
+<h3>قاعدة أكواد الألوان</h3>
+<p>مرجع كامل لأكواد الألوان المستخدمة في البرمجة.</p>
+</a>
+
+<a class="card other" href="apps/car-codes.html">
+<div class="icon">🚗</div>
+<h3>أكواد أعطال السيارات</h3>
+<p>قاعدة بيانات لشرح أكواد الأعطال OBD.</p>
+</a>
+
+</div>
+
+</div>
+
+<div id="docs" class="page">
+
+<h2>وثائق مفيدة</h2>
+
+<div class="container">
+
+<a class="card" onclick="openPDF('docs/file1.pdf')">
+<div class="icon">📄</div>
+<h3>وثيقة PDF</h3>
+<p>اضغط لعرض الملف</p>
+</a>
+
+</div>
+
+<iframe id="pdfViewer"></iframe>
+
+</div>
+
+<div id="about" class="page">
+
+<h2>من نحن</h2>
+
+<p>
+الأستاذ محمد قادري أستاذ مادة الفيزياء، يتمتع بخبرة تربوية تزيد عن 33 سنة في التدريس بالتعليم الثانوي. يهتم بتبسيط المفاهيم الفيزيائية وتوظيف التقنيات الحديثة والذكاء الاصطناعي في التعليم، من خلال تصميم تطبيقات ومحاكاة تفاعلية متوافقة مع المنهاج الجزائري، تهدف إلى دعم التعلم والفهم العميق لدى التلاميذ.
+
+يهدف هذا الموقع إلى توفير فضاء تعليمي رقمي يضم تجارب ومحاكاة فيزيائية، يضع خبرة الأستاذ الطويلة في خدمة التلميذ والأستاذ على حد سواء، ويساهم في: دعم التعلم الذاتي للتلميذ تسهيل فهم الدروس النظرية من خلال التطبيق العملي توفير أدوات رقمية حديثة للأساتذة تعزيز التعلم القائم على الفهم والتجربة .
+</p>
+
+</div>
+
+<div id="contact" class="page">
+
+<h2>اتصل بنا</h2>
+
+<p>Email : kadri68@gmail.com</p>
+<p>Phone : 0662692987</p>
+
+</div>
+
+<button id="topBtn" onclick="topFunction()">⬆</button>
+
+<footer>
+
+<p>انت الزائر رقم : <span id="visitorCount"></span></p>
+
+© 2026 الأستاذ محمد قادري
+
+</footer>
+
+<script>
+
+function showPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
+document.getElementById(id).classList.add('active')
+}
+
+function filterExp(level){
+showPage('home')
+let cards=document.querySelectorAll('.card')
+cards.forEach(c=>{
+c.style.display=c.classList.contains(level)?"block":"none"
+})
+countExp()
+}
+
+function searchExp(){
+let input=document.getElementById("search").value.toLowerCase()
+let cards=document.querySelectorAll(".card")
+cards.forEach(card=>{
+let title=card.innerText.toLowerCase()
+card.style.display=title.includes(input)?"block":"none"
+})
+countExp()
+}
+
+function countExp(){
+let visible=[...document.querySelectorAll('.card')].filter(c=>c.style.display!=="none")
+document.getElementById("expCount").innerText=visible.length
+}
+
+countExp()
+
+let visits=localStorage.getItem("visits")
+visits=visits?parseInt(visits)+1:1
+localStorage.setItem("visits",visits)
+document.getElementById("visitorCount").innerText=visits
+
+let btn=document.getElementById("topBtn")
+
+window.onscroll=function(){
+btn.style.display=(document.documentElement.scrollTop>300)?"block":"none"
+}
+
+function topFunction(){
+window.scrollTo({top:0,behavior:"smooth"})
+}
+
+function openPDF(file){
+document.getElementById("pdfViewer").src=file
+}
+
+</script>
+
+</body>
+</html>
