@@ -31,25 +31,30 @@
         .top {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             background: var(--bg-header);
-            padding: 15px;
+            padding: 20px 15px;
             border-bottom: 1px solid var(--border-color);
         }
 
         .center {
             text-align: center;
-            flex: 1;
+            width: 100%;
         }
 
-        .center h2 {
-            font-size: 16px;
-            margin: 5px 0 0 0;
+        .main-title {
+            font-size: 22px; /* تكبير العنوان الرئيسي */
+            margin: 0;
             color: var(--primary);
+            font-weight: 700;
         }
 
-        .logo { width: 50px; }
-        .side { width: 60px; }
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 10px 0 0 0;
+            font-weight: 500;
+        }
 
         .ticker {
             overflow: hidden;
@@ -231,7 +236,7 @@
         #topBtn {
             position: fixed;
             bottom: 20px;
-            right: 20px; /* تم النقل لليمين ليناسب العربية */
+            right: 20px;
             background: var(--primary);
             color: #fff;
             border: none;
@@ -263,18 +268,16 @@
 <body>
 
     <header class="top">
-        <img src="images/header-right.png" class="side" alt="زخرفة يمينية">
         <div class="center">
-            <img src="images/logo.png" class="logo" alt="شعار الأستاذ">
-            <h2>الموقع الرسمي للأستاذ محمد قادري</h2>
+            <h1 class="main-title">الموقع الرسمي للأستاذ محمد قادري</h1>
+            <p class="subtitle">برمجة تجارب فيزياء وحاسبات علمية باستخدام الذكاء الاصطناعي</p>
         </div>
-        <img src="images/header-left.png" class="side" alt="زخرفة يسارية">
     </header>
 
     <div class="ticker">
         <div class="ticker-move">
-            <span>الأستاذ محمد قادري أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر Email: kadri68@gmail.com Phone: 0662692987</span>
-            <span>الأستاذ محمد قادري أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر Email: kadri68@gmail.com Phone: 0662692987</span>
+            <span>المطور: الأستاذ محمد قادري أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر | Email: kadri68@gmail.com | Phone: 0662692987</span>
+            <span>المطور: الأستاذ محمد قادري أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر | Email: kadri68@gmail.com | Phone: 0662692987</span>
         </div>
     </div>
 
@@ -374,7 +377,9 @@
     <button id="topBtn" onclick="topFunction()">⬆</button>
 
     <footer>
-        <p>© 2026 الأستاذ محمد قادري</p>
+        <p>المطور: الأستاذ محمد قادري أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر</p>
+        <p>Email: kadri68@gmail.com | Phone: 0662692987</p>
+        <p>© 2026</p>
     </footer>
 
     <script>
