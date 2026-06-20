@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    الموقع الرسمي للأستاذ محمد قادري</title>
+    <title>الموقع الرسمي للأستاذ محمد قادري</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
@@ -21,7 +21,7 @@
 
         body {
             font-family: 'Tajawal', sans-serif;
-            font-size: 14px; /* حجم خط صغير ومناسب للهواتف */
+            font-size: 14px;
             background: var(--bg-main);
             margin: 0;
             color: var(--text-main);
@@ -43,7 +43,7 @@
         }
 
         .main-title {
-            font-size: 22px; /* تكبير العنوان الرئيسي */
+            font-size: 22px;
             margin: 0;
             color: var(--primary);
             font-weight: 700;
@@ -261,7 +261,6 @@
             border-top: 1px solid var(--border-color);
             margin-top: 40px;
         }
-
     </style>
 </head>
 
@@ -290,6 +289,8 @@
         <button onclick="showPage('docs', this)">وثائق</button>
         <button onclick="showPage('about', this)">من نحن</button>
         <button onclick="showPage('contact', this)">اتصل بنا</button>
+        <!-- الزر الجديد بجوار اتصل بنا -->
+        <button onclick="window.open('https://kadrimohammed-official-website.netlify.app/#projects', '_blank')" title="الانتقال إلى الموقع السابق">🔗 الموقع السابق</button>
     </div>
 
     <div id="home" class="page active">
@@ -383,13 +384,11 @@
     </footer>
 
     <script>
-        // دالة تفعيل الأزرار في شريط التنقل
         function setActiveButton(btnElement) {
             document.querySelectorAll('.navbar button').forEach(b => b.classList.remove('active'));
             if(btnElement) btnElement.classList.add('active');
         }
 
-        // عرض الصفحات
         function showPage(id, btnElement) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -397,10 +396,9 @@
             if(btnElement) {
                 setActiveButton(btnElement);
             } else {
-                setActiveButton(document.querySelector('.navbar button')); // تفعيل "الرئيسية" افتراضياً
+                setActiveButton(document.querySelector('.navbar button'));
             }
 
-            // إعادة إظهار جميع البطاقات عند العودة للرئيسية
             if (id === 'home') {
                 let cards = document.querySelectorAll('.card');
                 cards.forEach(c => c.style.display = "flex");
@@ -409,10 +407,9 @@
             }
         }
 
-        // تصفية حسب المستوى
         function filterExp(level, btnElement) {
-            showPage('home'); // ننتقل للرئيسية أولاً
-            setActiveButton(btnElement); // نفعل الزر المضغوط
+            showPage('home');
+            setActiveButton(btnElement);
             
             let cards = document.querySelectorAll('#cardsContainer .card');
             cards.forEach(c => {
@@ -421,7 +418,6 @@
             countExp();
         }
 
-        // محرك البحث
         function searchExp() {
             let input = document.getElementById("search").value.toLowerCase();
             let cards = document.querySelectorAll("#cardsContainer .card");
@@ -432,16 +428,13 @@
             countExp();
         }
 
-        // عداد الأدوات المعروضة
         function countExp() {
             let visible = [...document.querySelectorAll('#cardsContainer .card')].filter(c => c.style.display !== "none");
             document.getElementById("expCount").innerText = visible.length;
         }
 
-        // تشغيل العداد عند البداية
         countExp();
 
-        // زر الصعود للأعلى
         let btn = document.getElementById("topBtn");
         window.onscroll = function () {
             btn.style.display = (document.documentElement.scrollTop > 300) ? "block" : "none";
@@ -451,7 +444,6 @@
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
-        // عرض ملف الـ PDF
         function openPDF(file) {
             document.getElementById("pdfViewer").src = file;
         }

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    الموقع الرسمي للأستاذ محمد قادري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-header: #020617;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px; /* حجم خط صغير ومناسب للهواتف */
+            background: var(--bg-main);
+            margin: 0;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-header);
+            padding: 20px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .center {
+            text-align: center;
+            width: 100%;
+        }
+
+        .main-title {
+            font-size: 22px; /* تكبير العنوان الرئيسي */
+            margin: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 10px 0 0 0;
+            font-weight: 500;
+        }
+
+        .ticker {
+            overflow: hidden;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 12px;
+        }
+
+        .ticker-move {
+            display: flex;
+            width: max-content;
+            animation: ticker 25s linear infinite;
+        }
+
+        .ticker span {
+            padding: 8px 40px;
+            white-space: nowrap;
+            color: var(--text-muted);
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0) }
+            100% { transform: translateX(-50%) }
+        }
+
+        .navbar {
+            background: var(--bg-header);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .navbar button {
+            font-family: 'Tajawal', sans-serif;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar button:hover, .navbar button.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .search-box {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .search-box input {
+            font-family: 'Tajawal', sans-serif;
+            padding: 10px 15px;
+            width: 85%;
+            max-width: 300px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-header);
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+        }
+
+        .counter {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .counter span {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+            border-color: var(--primary);
+        }
+
+        .card img { width: 45px; margin-bottom: 10px; }
+        .icon { font-size: 32px; margin-bottom: 10px; }
+
+        .card h3 {
+            font-size: 13px;
+            margin: 0 0 5px 0;
+            color: var(--text-main);
+        }
+
+        .card p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .page {
+            display: none;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page.active { display: block; }
+
+        h2.page-title {
+            text-align: center;
+            font-size: 16px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .text-content {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: justify;
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        #pdfViewer {
+            width: 100%;
+            height: 70vh;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        #topBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        #topBtn:hover { background: var(--primary-hover); }
+
+        footer {
+            background: var(--bg-header);
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header class="top">
+        <div class="center">
+            <h1 class="main-title">الموقع الرسمي للأستاذ محمد قادري</h1>
+            <p class="subtitle">برمجة تجارب فيزياء وحاسبات علمية باستخدام الذكاء الاصطناعي</p>
+        </div>
+    </header>
+
+    <div class="ticker">
+        <div class="ticker-move">
+            <span>المطور: الأستاذ محمد قادري أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر | Email: kadri68@gmail.com | Phone: 0662692987</span>
+            <span>المطور: الأستاذ محمد قادري أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر | Email: kadri68@gmail.com | Phone: 0662692987</span>
+        </div>
+    </div>
+
+    <div class="navbar" id="navbar">
+        <button class="active" onclick="showPage('home', this)">الرئيسية</button>
+        <button onclick="filterExp('third', this)">الثالثة ثانوي</button>
+        <button onclick="filterExp('second', this)">الثانية ثانوي</button>
+        <button onclick="filterExp('first', this)">الأولى ثانوي</button>
+        <button onclick="filterExp('other', this)">منوعة</button>
+        <button onclick="showPage('docs', this)">وثائق</button>
+        <button onclick="showPage('about', this)">من نحن</button>
+        <button onclick="showPage('contact', this)">اتصل بنا</button>
+    </div>
+
+    <div id="home" class="page active">
+        <div class="search-box">
+            <input type="text" id="search" placeholder="ابحث عن أداة..." onkeyup="searchExp()">
+        </div>
+
+        <div class="counter">
+            عدد الأدوات المعروضة : <span id="expCount"></span>
+        </div>
+
+        <div class="container" id="cardsContainer">
+            <a class="card third" href="apps/rc/rc.html">
+                <img src="images/rc.png" alt="RC">
+                <h3>رسم بيانات الدارة RC</h3>
+                <p>إدخال قيم المقاومة وسعة المكثفة وحساب التوتر.</p>
+            </a>
+
+            <a class="card third" href="apps/rl/rl.html">
+                <img src="images/rl.png" alt="RL">
+                <h3>رسم بيانات الدارة RL</h3>
+                <p>إدخال قيم المقاومة والذاتية للمحاكاة.</p>
+            </a>
+
+            <a class="card third" href="apps/os/os.html">
+                <img src="images/os.png" alt="OS">
+                <h3>راسم الاهتزاز المهبطي</h3>
+                <p>محاكاة راسم الاهتزاز مع دارات RC و RL.</p>
+            </a>
+
+            <a class="card first" href="apps/gas-law.html">
+                <div class="icon">🧪</div>
+                <h3>قانون الغازات المثالية</h3>
+                <p>حساب العلاقة بين الضغط والحجم والحرارة.</p>
+            </a>
+
+            <a class="card other" href="apps/beam-calculator.html">
+                <div class="icon">🏗️</div>
+                <h3>حساب ردود أفعال المساند</h3>
+                <p>أداة هندسية لحساب ردود الأفعال والمخططات.</p>
+            </a>
+
+            <a class="card other" href="apps/colors.html">
+                <div class="icon">🎨</div>
+                <h3>قاعدة أكواد الألوان</h3>
+                <p>مرجع لأكواد الألوان المستخدمة في البرمجة.</p>
+            </a>
+
+            <a class="card other" href="apps/car-codes.html">
+                <div class="icon">🚗</div>
+                <h3>أكواد أعطال السيارات</h3>
+                <p>قاعدة بيانات لشرح أكواد الأعطال OBD.</p>
+            </a>
+        </div>
+    </div>
+
+    <div id="docs" class="page">
+        <h2 class="page-title">وثائق مفيدة</h2>
+        <div class="container">
+            <a class="card" href="javascript:void(0)" onclick="openPDF('docs/file1.pdf')">
+                <div class="icon">📄</div>
+                <h3>وثيقة PDF</h3>
+                <p>اضغط لعرض الملف</p>
+            </a>
+        </div>
+        <iframe id="pdfViewer" src=""></iframe>
+    </div>
+
+    <div id="about" class="page">
+        <h2 class="page-title">من نحن</h2>
+        <div class="text-content">
+            <p>الأستاذ محمد قادري أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر، يتمتع بخبرة تربوية تزيد عن 33 سنة في التدريس بالتعليم الثانوي. يهتم بتبسيط المفاهيم الفيزيائية وتوظيف التقنيات الحديثة والذكاء الاصطناعي في التعليم، من خلال تصميم تطبيقات ومحاكاة تفاعلية متوافقة مع المنهاج الجزائري، تهدف إلى دعم التعلم والفهم العميق لدى التلاميذ.</p>
+            <p>يهدف هذا الموقع إلى توفير فضاء تعليمي رقمي يضم تجارب ومحاكاة فيزيائية، يضع خبرة الأستاذ الطويلة في خدمة التلميذ والأستاذ على حد سواء، ويساهم في: دعم التعلم الذاتي للتلميذ، تسهيل فهم الدروس النظرية من خلال التطبيق العملي، توفير أدوات رقمية حديثة للأساتذة، وتعزيز التعلم القائم على الفهم والتجربة.</p>
+        </div>
+    </div>
+
+    <div id="contact" class="page">
+        <h2 class="page-title">اتصل بنا</h2>
+        <div class="text-content" style="text-align: center;">
+            <p><strong>البريد الإلكتروني:</strong> kadri68@gmail.com</p>
+            <p><strong>رقم الهاتف:</strong> 0662692987</p>
+        </div>
+    </div>
+
+    <button id="topBtn" onclick="topFunction()">⬆</button>
+
+    <footer>
+        <p>المطور: الأستاذ محمد قادري أستاذ مادة الفيزياء ثانوية محمد الأخضر فيلالي ولاية غرداية - الجزائر</p>
+        <p>Email: kadri68@gmail.com | Phone: 0662692987</p>
+        <p>© 2026</p>
+    </footer>
+
+    <script>
+        // دالة تفعيل الأزرار في شريط التنقل
+        function setActiveButton(btnElement) {
+            document.querySelectorAll('.navbar button').forEach(b => b.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+        }
+
+        // عرض الصفحات
+        function showPage(id, btnElement) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            if(btnElement) {
+                setActiveButton(btnElement);
+            } else {
+                setActiveButton(document.querySelector('.navbar button')); // تفعيل "الرئيسية" افتراضياً
+            }
+
+            // إعادة إظهار جميع البطاقات عند العودة للرئيسية
+            if (id === 'home') {
+                let cards = document.querySelectorAll('.card');
+                cards.forEach(c => c.style.display = "flex");
+                document.getElementById("search").value = "";
+                countExp();
+            }
+        }
+
+        // تصفية حسب المستوى
+        function filterExp(level, btnElement) {
+            showPage('home'); // ننتقل للرئيسية أولاً
+            setActiveButton(btnElement); // نفعل الزر المضغوط
+            
+            let cards = document.querySelectorAll('#cardsContainer .card');
+            cards.forEach(c => {
+                c.style.display = c.classList.contains(level) ? "flex" : "none";
+            });
+            countExp();
+        }
+
+        // محرك البحث
+        function searchExp() {
+            let input = document.getElementById("search").value.toLowerCase();
+            let cards = document.querySelectorAll("#cardsContainer .card");
+            cards.forEach(card => {
+                let title = card.innerText.toLowerCase();
+                card.style.display = title.includes(input) ? "flex" : "none";
+            });
+            countExp();
+        }
+
+        // عداد الأدوات المعروضة
+        function countExp() {
+            let visible = [...document.querySelectorAll('#cardsContainer .card')].filter(c => c.style.display !== "none");
+            document.getElementById("expCount").innerText = visible.length;
+        }
+
+        // تشغيل العداد عند البداية
+        countExp();
+
+        // زر الصعود للأعلى
+        let btn = document.getElementById("topBtn");
+        window.onscroll = function () {
+            btn.style.display = (document.documentElement.scrollTop > 300) ? "block" : "none";
+        };
+
+        function topFunction() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // عرض ملف الـ PDF
+        function openPDF(file) {
+            document.getElementById("pdfViewer").src = file;
+        }
+    </script>
+
+</body>
+</html>
